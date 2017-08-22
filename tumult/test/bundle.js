@@ -361,7 +361,9 @@ module.exports = terrapaint
 },{}],4:[function(require,module,exports){
 var terrapaint = require('terrapaint')
 var tumult = require('../tumult')(0)
-terrapaint(tumult.perlin2, 512, 512)
+terrapaint(tumult.perlin2, 512, 512, {
+  offset: true
+})
 
 },{"../tumult":5,"terrapaint":3}],5:[function(require,module,exports){
 var rand = require('random-seed')
@@ -407,22 +409,22 @@ function tumultFactory (seed) {
     var r = rng(256)
     var temp = p[i]
     p[i] = p[r]
-    p[r] = p[i]
+    p[r] = temp
   }
   for (var i = 0; i < 256; i++) p[i + 256] = p[i]
 
   var module = {
     perlin2: function (x, y) {
-      var gx = Math.trunc(x) % 256
-      var gy = Math.trunc(y) % 256
+      var gx = Math.trunc(x) % 255
+      var gy = Math.trunc(y) % 255
 
       var dx = x - gx
       var dy = y - gy
 
-      var n00 = grad2[(gx + p[gy]) % 8].dot(dx, dy)
-      var n10 = grad2[(gx + 1 + p[gy]) % 8].dot(dx - 1, dy)
-      var n01 = grad2[(gx + p[gy + 1]) % 8].dot(dx, dy - 1)
-      var n11 = grad2[(gx + 1 + p[gy + 1]) % 8].dot(dx - 1, dy - 1)
+      var n00 = grad2[p[(gx + p[gy])] % 8].dot(dx, dy)
+      var n10 = grad2[p[(gx + 1 + p[gy])] % 8].dot(dx - 1, dy)
+      var n01 = grad2[p[(gx + p[gy + 1])] % 8].dot(dx, dy - 1)
+      var n11 = grad2[p[(gx + 1 + p[gy + 1])] % 8].dot(dx - 1, dy - 1)
 
       return lerp(
         lerp(n00, n10, fade(dx)),
