@@ -1,0 +1,21 @@
+{
+  "name": "tumult",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tumult.js",
+  "scripts": {
+    "build": "browserify ./test/demo.js > ./test/bundle.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "random-seed": "^0.3.0",
+    "seed-random": "^2.2.0",
+    "terrapaint": "^1.0.1"
+  },
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "terrapaint": "^1.0.2"
+  }
+}
