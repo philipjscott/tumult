@@ -1,0 +1,23 @@
+{
+  "name": "tumult",
+  "version": "1.0.0",
+  "description": "A javascript noise library",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify ./docs/demo.js > ./docs/bundle.js"
+  },
+  "keywords": ["noise", "perlin", "perlin noise", "procedural generation"],
+  "author": "Philip Scott",
+  "license": "MIT",
+  "dependencies": {
+    "random-seed": "^0.3.0"
+  },
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "terrapaint": "^1.0.2"
+  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScottyFillups/tumult.git"
+  }
+}

@@ -1,4 +1,134 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var terrapaint = require('terrapaint')
+var tumult = require('../index')
+var noise = tumult(Math.random())
+terrapaint(noise.perlin2, 512, 512, {
+  offset: true
+})
+
+},{"../index":2,"terrapaint":5}],2:[function(require,module,exports){
+var rand = require('random-seed')
+
+
+// Tumult, JavaScript noise generator
+// Created by Philip Scott | ScottyFillups, 2017
+// https://github.com/ScottyFillups
+
+function tumultFactory (seed) {
+  seed = seed || Math.random()
+
+  var rng = rand.create(seed)
+  var p = new Uint8Array(512)
+  var g2 = [
+    new Vec2(1, 0), new Vec2(1, 1), new Vec2(0, 1), new Vec2(-1, 1),
+    new Vec2(-1, 0), new Vec2(-1, -1), new Vec2(0, -1), new Vec2(1, -1)
+  ]
+  var g3 = [
+    new Vec3(1, 1, 1), new Vec3(-1, 1, 1), new Vec3(1, -1, 1), new Vec3(-1, -1, 1),
+    new Vec3(1, 1, 0), new Vec3(-1, 1, 0), new Vec3(1, -1, 0), new Vec3(-1, -1, 0),
+    new Vec3(1, 1, -1), new Vec3(-1, 1, -1), new Vec3(1, -1, -1), new Vec3(-1, -1, -1)
+  ]
+  function lerp (a, b, t) {
+    return a * (1 - t) + b * t
+  }
+  function fade (t) {
+    return t * t * t * (10 + t * (-15 + t * 6))
+  }
+  function grad2(x, y) {
+    var hash = p[x + p[y]] % g2.length
+    return g2[hash]
+  }
+  function grad3(x, y, z) {
+    var hash = p[x + p[y + p[z]]] % g3.length
+    return g3[hash]
+  }
+  function Vec2 (x, y) {
+    this.x = x
+    this.y = y
+  }
+  function Vec3 (x, y, z) {
+    this.x = x
+    this.y = y
+    this.z = z
+  }
+  Vec2.prototype.dot = function (x, y) {
+    return this.x * x + this.y * y
+  }
+  Vec3.prototype.dot = function (x, y, z) {
+    return this.x * x + this.y * y + this.z * z
+  }
+
+  for (var i = 0; i < 256; i++) p[i] = i
+  for (var i = 0; i < 256; i++) {
+    var r = rng(256)
+    var temp = p[i]
+    p[i] = p[r]
+    p[r] = temp
+  }
+  for (var i = 0; i < 256; i++) p[i + 256] = p[i]
+
+  var module = {
+    seed: function (s) {
+      rng = rand.create(s)
+    },
+    perlin2: function (x, y) {
+      var gx = Math.trunc(x) % 256
+      var gy = Math.trunc(y) % 256
+
+      var dx = x - gx
+      var dy = y - gy
+
+      var n00 = grad2(gx, gy).dot(dx, dy)
+      var n10 = grad2(gx + 1, gy).dot(dx - 1, dy)
+      var n01 = grad2(gx, gy + 1).dot(dx, dy - 1)
+      var n11 = grad2(gx + 1, gy + 1).dot(dx - 1, dy - 1)
+
+      return lerp(
+        lerp(n00, n10, fade(dx)),
+        lerp(n01, n11, fade(dx)),
+        fade(dy)
+      )
+    },
+    perlin3: function (x, y, z) {
+      var gx = Math.trunc(x) % 256
+      var gy = Math.trunc(y) % 256
+      var gz = Math.trunc(z) % 256
+
+      var dx = x - gx
+      var dy = y - gy
+      var dz = z - gz
+
+      var n000 = grad3(gx, gy, gz).dot(dx, dy, dz)
+      var n100 = grad3(gx + 1, gy, gz).dot(dx - 1, dy, dz)
+      var n010 = grad3(gx, gy + 1, gz).dot(dx, dy - 1, dz)
+      var n110 = grad3(gx + 1, gy + 1, gz).dot(dx - 1, dy - 1, dz)
+      var n001 = grad3(gx, gy, gz + 1).dot(dx, dy, dz - 1)
+      var n101 = grad3(gx + 1, gy, gz + 1).dot(dx - 1, dy, dz - 1)
+      var n011 = grad3(gx, gy + 1, gz + 1).dot(dx, dy - 1, dz - 1)
+      var n111 = grad3(gx + 1, gy + 1, gz + 1).dot(dx - 1, dy - 1, dz - 1)
+
+      return lerp(
+        lerp(
+          lerp(n000, n100, dx),
+          lerp(n010, n110, dx),
+          fade(dy)
+        ),
+        lerp(
+          lerp(n001, n101, dx),
+          lerp(n011, n111, dx),
+          fade(dy)
+        ),
+        fade(dz)
+      )
+    }
+  }
+  
+  return module
+}
+
+module.exports = tumultFactory
+
+},{"random-seed":4}],3:[function(require,module,exports){
 exports = module.exports = stringify
 exports.getSerialize = serializer
 
@@ -27,7 +157,7 @@ function serializer(replacer, cycleReplacer) {
   }
 }
 
-},{}],2:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /*
  * random-seed
  * https://github.com/skratchdot/random-seed
@@ -297,7 +427,7 @@ uheprng.create = function (seed) {
 };
 module.exports = uheprng;
 
-},{"json-stringify-safe":1}],3:[function(require,module,exports){
+},{"json-stringify-safe":3}],5:[function(require,module,exports){
 try {
   var imageTest = new ImageData(20, 20)
   var numberTest = Math.trunc(20.1)
@@ -358,88 +488,4 @@ function terrapaint (noise, w, h, options) {
 
 module.exports = terrapaint
 
-},{}],4:[function(require,module,exports){
-var terrapaint = require('terrapaint')
-var tumult = require('../tumult')(0)
-terrapaint(tumult.perlin2, 512, 512, {
-  offset: true
-})
-
-},{"../tumult":5,"terrapaint":3}],5:[function(require,module,exports){
-var rand = require('random-seed')
-
-function tumultFactory (seed) {
-  seed = seed || Math.random()
-
-  var rng = rand.create(seed)
-  var p = new Uint8Array(512)
-  var grad2 = [
-    new Vec2(1, 0), new Vec2(1, 1), new Vec2(0, 1), new Vec2(-1, 1),
-    new Vec2(-1, 0), new Vec2(-1, -1), new Vec2(0, -1), new Vec2(1, -1)
-  ]
-  var grad3 = [
-    new Vec3(1, 1, 1), new Vec3(-1, 1, 1), new Vec3(1, -1, 1), new Vec3(-1, -1, 1),
-    new Vec3(1, 1, 0), new Vec3(-1, 1, 0), new Vec3(1, -1, 0), new Vec3(-1, -1, 0),
-    new Vec3(1, 1, -1), new Vec3(-1, 1, -1), new Vec3(1, -1, -1), new Vec3(-1, -1, -1)
-  ]
-  function lerp (a, b, t) {
-    return a * (1 - t) + b * t
-  }
-  function fade (t) {
-    return t * t * t * (10 + t * (-15 + t * 6))
-  }
-  function Vec2 (x, y) {
-    this.x = x
-    this.y = y
-  }
-  function Vec3 (x, y, z) {
-    this.x = x
-    this.y = y
-    this.z = z
-  }
-  Vec2.prototype.dot = function (x, y) {
-    return this.x * x + this.y * y
-  }
-  Vec3.prototype.dot = function (x, y, z) {
-    return this.x * x + this.y * y + this.z * z
-  }
-
-  for (var i = 0; i < 256; i++) p[i] = i
-  for (var i = 0; i < 256; i++) {
-    var r = rng(256)
-    var temp = p[i]
-    p[i] = p[r]
-    p[r] = temp
-  }
-  for (var i = 0; i < 256; i++) p[i + 256] = p[i]
-
-  var module = {
-    perlin2: function (x, y) {
-      var gx = Math.trunc(x) % 255
-      var gy = Math.trunc(y) % 255
-
-      var dx = x - gx
-      var dy = y - gy
-
-      var n00 = grad2[p[(gx + p[gy])] % 8].dot(dx, dy)
-      var n10 = grad2[p[(gx + 1 + p[gy])] % 8].dot(dx - 1, dy)
-      var n01 = grad2[p[(gx + p[gy + 1])] % 8].dot(dx, dy - 1)
-      var n11 = grad2[p[(gx + 1 + p[gy + 1])] % 8].dot(dx - 1, dy - 1)
-
-      return lerp(
-        lerp(n00, n10, fade(dx)),
-        lerp(n01, n11, fade(dx)),
-        fade(dy)
-      )
-    },
-    perlin3: function (x, y, z) {
-
-    }
-  }
-  
-  return module
-}
-
-module.exports = tumultFactory
-
-},{"random-seed":2}]},{},[4]);
+},{}]},{},[1]);
