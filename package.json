@@ -15,7 +15,7 @@
   "devDependencies": {
     "browserify": "^14.4.0",
     "terrapaint": "^1.0.2"
-  }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ScottyFillups/tumult.git"

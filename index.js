@@ -32,6 +32,7 @@ function tumultFactory (seed) {
     new Vec4(1, 1, 1, 0), new Vec4(1, 1, -1, 0), new Vec4(1, -1, 1, 0), new Vec4(1, -1, -1, 0),
     new Vec4(-1, 1, 1, 0), new Vec4(-1, 1, -1, 0), new Vec4(-1, -1, 1, 0), new Vec4(-1, -1, -1, 0)
   ]
+  var gN = []
   function lerp (a, b, t) {
     return a * (1 - t) + b * t
   }
@@ -54,6 +55,16 @@ function tumultFactory (seed) {
     var hash = p[x + p[y + p[z + p[t]]]] % g4.length
     return g4[hash]
   }
+  function gradN () {
+    
+  }
+  function getN (count, gs, ds) {
+    var ns = []
+    for (var i = 0; i < (2 << count); i++) {
+      ns[i] = 
+    }
+    return ns
+  }
   function Vec1 (x) {
     this.x = x
   }
@@ -72,6 +83,9 @@ function tumultFactory (seed) {
     this.z = z
     this.t = t
   }
+  function VecN(R) {
+    this.R = R
+  }
   Vec1.prototype.dot = function (x) {
     return this.x * x
   }
@@ -83,6 +97,13 @@ function tumultFactory (seed) {
   }
   Vec4.prototype.dot = function (x, y, z, t) {
     return this.x * x + this.y * y + this.z * z + this.t * t
+  }
+  VecN.prototype.dot = function (R) {
+    var val = 0
+    for (var i = 0; i < R.length; i++) {
+      val += this.R[i] * R[i]
+    }
+    return val
   }
 
   var i
@@ -169,7 +190,7 @@ function tumultFactory (seed) {
       var dz = z - gz
       var dt = t - gt
 
-      var n0000 = grad4(gx, gy, gz).dot(dx, dy, dz)
+      var n0000 = grad4(gx, gy, gz, gt).dot(dx, dy, dz, dt)
       var n1000 = grad4(gx + 1, gy, gz, gt).dot(dx - 1, dy, dz)
       var n0100 = grad4(gx, gy + 1, gz, gt).dot(dx, dy - 1, dz)
       var n1100 = grad4(gx + 1, gy + 1, gz, gt).dot(dx - 1, dy - 1, dz)
@@ -215,6 +236,21 @@ function tumultFactory (seed) {
         ),
         fade(dt)
       )
+    },
+    perlinN: function () {
+      var gs = []
+      var ds = []
+      gN = generateGN(arguments.length)
+
+      var i
+      for (i = 0; i < arguments.length; i++) {
+        gs[i] = Math.trunc(arguments[i]) % 256
+        ds[i] = arguments[i] - gs[i]
+      }
+
+      var ns = getN(argument.length, gs, ds)
+
+      return lerpN(ns, ds)
     }
   }
 
