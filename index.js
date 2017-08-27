@@ -36,6 +36,7 @@ function tumultFactory (seed) {
   function lerp (a, b, t) {
     return a * (1 - t) + b * t
   }
+  function lerpN () {}
   function fade (t) {
     return t * t * t * (10 + t * (-15 + t * 6))
   }
@@ -55,13 +56,19 @@ function tumultFactory (seed) {
     var hash = p[x + p[y + p[z + p[t]]]] % g4.length
     return g4[hash]
   }
-  function gradN () {
-    
+  function gradN (gs) {
+    if (gs.length === 1) return gN[gs[0]]
+    return gN[gs[0] + gradN(gs.slice(1))]
   }
-  function getN (count, gs, ds) {
+  function getNs (count, gs, ds) {
     var ns = []
-    for (var i = 0; i < (2 << count); i++) {
-      ns[i] = 
+    for (var i = 0; i < (2 << count); i++) {a
+      var gsPerm = gs.slice()
+      var dsPerm = ds.slice()
+
+      // funky bit masking logic
+
+      ns[i] = gradN(gsPerm).dot(dsPerm)
     }
     return ns
   }
@@ -248,7 +255,7 @@ function tumultFactory (seed) {
         ds[i] = arguments[i] - gs[i]
       }
 
-      var ns = getN(argument.length, gs, ds)
+      var ns = getNs(argument.length, gs, ds)
 
       return lerpN(ns, ds)
     }
