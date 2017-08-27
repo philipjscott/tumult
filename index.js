@@ -33,10 +33,19 @@ function tumultFactory (seed) {
     new Vec4(-1, 1, 1, 0), new Vec4(-1, 1, -1, 0), new Vec4(-1, -1, 1, 0), new Vec4(-1, -1, -1, 0)
   ]
   var gN = []
+  function generateGN (count) {
+    for (var i = 0; i < count * 2; i++) {
+      var vec = new Array(count).fill(0)
+      vec[i % count] = i + 1 > count / 2 ? 1 : -1
+      gN[i] = new VecN(vec)
+    }
+  }
   function lerp (a, b, t) {
     return a * (1 - t) + b * t
   }
-  function lerpN () {}
+  function lerpN (ns, ds) {
+  
+  }
   function fade (t) {
     return t * t * t * (10 + t * (-15 + t * 6))
   }
