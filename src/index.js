@@ -43,11 +43,12 @@ function tumultFactory (seed) {
   function lerp (a, b, t) {
     return a * (1 - t) + b * t
   }
+  // too many Ns
   function lerpN (ns, ds) {
     if (ds.length === 1) return lerp(ns[0], ns[1], ds[0])
     var ns1 = ns.slice(0, ns.length / 2)
     var ns2 = ns.slice(ns.length / 2)
-    return lerpN(
+    return lerp(
       lerpN(ns1, ds.slice(1)),
       lerpN(ns2, ds.slice(1)),
       fade(ds[0])
@@ -72,13 +73,13 @@ function tumultFactory (seed) {
     var hash = p[x + p[y + p[z + p[t]]]] % g4.length
     return g4[hash]
   }
-  function gradN (gs) {
-    if (gs.length === 1) return gN[gs[0]]
-    return gN[gs[0] + gradN(gs.slice(1))]
+  function hashN (gs) {
+    if (gs.length === 1) return p[gs[0]]
+    return p[gs[0] + hashN(gs.slice(1))]
   }
   function getNs (count, gs, ds) {
     var ns = []
-    for (var i = 0; i < (2 << count); i++) {
+    for (var i = 0; i < (2 << (count - 1)); i++) {
       var gsPerm = gs.slice()
       var dsPerm = ds.slice()
       var temp = i
@@ -90,8 +91,7 @@ function tumultFactory (seed) {
         }
         temp = temp >> 1
       }
-
-      ns[i] = gradN(gsPerm).dot(dsPerm)
+      ns[i] = gN[hashN(gsPerm) % (count * 2)].dot(dsPerm)
     }
     return ns
   }
@@ -270,16 +270,14 @@ function tumultFactory (seed) {
     perlinN: function () {
       var gs = []
       var ds = []
-      gN = generateGN(arguments.length)
+      generateGN(arguments.length)
 
       var i
       for (i = 0; i < arguments.length; i++) {
         gs[i] = Math.trunc(arguments[i]) % 256
         ds[i] = arguments[i] - gs[i]
       }
-
       var ns = getNs(arguments.length, gs, ds)
-
       return lerpN(ns, ds)
     }
   }
