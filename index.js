@@ -44,7 +44,14 @@ function tumultFactory (seed) {
     return a * (1 - t) + b * t
   }
   function lerpN (ns, ds) {
-  
+    if (ds.length === 1) return lerp(ns[0], ns[1], ds[0])
+    var ns1 = ns.slice(0, ns.length / 2)
+    var ns2 = ns.slice(ns.length / 2)
+    return lerpN(
+      lerpN(ns1, ds.slice(1)),
+      lerpN(ns2, ds.slice(1)),
+      fade(ds[0])
+    )
   }
   function fade (t) {
     return t * t * t * (10 + t * (-15 + t * 6))
@@ -71,7 +78,7 @@ function tumultFactory (seed) {
   }
   function getNs (count, gs, ds) {
     var ns = []
-    for (var i = 0; i < (2 << count); i++) {a
+    for (var i = 0; i < (2 << count); i++) {
       var gsPerm = gs.slice()
       var dsPerm = ds.slice()
       var temp = i
@@ -227,7 +234,7 @@ function tumultFactory (seed) {
       var n1101 = grad4(gx + 1, gy + 1, gz, gt + 1).dot(dx - 1, dy - 1, dz, dt - 1)
       var n0011 = grad4(gx, gy, gz + 1, gt + 1).dot(dx, dy, dz - 1, dt - 1)
       var n1011 = grad4(gx + 1, gy, gz + 1, gt + 1).dot(dx - 1, dy, dz - 1, dt - 1)
-      var n0111 = grad4(gx, gy + 1, gz + 1), gt + 1.dot(dx, dy - 1, dz - 1, dt - 1)
+      var n0111 = grad4(gx, gy + 1, gz + 1, gt + 1).dot(dx, dy - 1, dz - 1, dt - 1)
       var n1111 = grad4(gx + 1, gy + 1, gz + 1, gt + 1).dot(dx - 1, dy - 1, dz - 1, dt - 1)
 
       return lerp(
@@ -271,7 +278,7 @@ function tumultFactory (seed) {
         ds[i] = arguments[i] - gs[i]
       }
 
-      var ns = getNs(argument.length, gs, ds)
+      var ns = getNs(arguments.length, gs, ds)
 
       return lerpN(ns, ds)
     }
