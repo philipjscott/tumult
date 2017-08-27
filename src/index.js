@@ -36,7 +36,7 @@ function tumultFactory (seed) {
   function generateGN (count) {
     for (var i = 0; i < count * 2; i++) {
       var vec = new Array(count).fill(0)
-      vec[i % count] = i + 1 > count / 2 ? 1 : -1
+      vec[i % count] = i / count >= 1 ? 1 : -1
       gN[i] = new VecN(vec)
     }
   }
@@ -278,7 +278,7 @@ function tumultFactory (seed) {
         ds[i] = arguments[i] - gs[i]
       }
       var ns = getNs(arguments.length, gs, ds)
-      return lerpN(ns, ds)
+      return lerpN(ns, ds.reverse())
     }
   }
 
