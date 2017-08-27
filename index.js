@@ -65,8 +65,15 @@ function tumultFactory (seed) {
     for (var i = 0; i < (2 << count); i++) {a
       var gsPerm = gs.slice()
       var dsPerm = ds.slice()
+      var temp = i
 
-      // funky bit masking logic
+      for (var j = 0; j < count; j++) {
+        if (temp & 1) {
+          gsPerm[j] += 1
+          dsPerm[j] -= 1
+        }
+        temp = temp >> 1
+      }
 
       ns[i] = gradN(gsPerm).dot(dsPerm)
     }
