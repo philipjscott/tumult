@@ -17,6 +17,7 @@ function tumultFactory (seed) {
     new Vec2(1, 0), new Vec2(1, 1), new Vec2(0, 1), new Vec2(-1, 1),
     new Vec2(-1, 0), new Vec2(-1, -1), new Vec2(0, -1), new Vec2(1, -1)
   ]
+/*  var g2 = [new Vec2(1, 0), new Vec2(-1, 0), new Vec2(0, 1), new Vec2(0, -1)]*/
   var g3 = [
     new Vec3(1, 1, 1), new Vec3(-1, 1, 1), new Vec3(1, -1, 1), new Vec3(-1, -1, 1),
     new Vec3(1, 1, 0), new Vec3(-1, 1, 0), new Vec3(1, -1, 0), new Vec3(-1, -1, 0),
@@ -270,7 +271,10 @@ function tumultFactory (seed) {
     perlinN: function () {
       var gs = []
       var ds = []
-      generateGN(arguments.length)
+
+      if (gN.length === 0) {
+        generateGN(arguments.length)
+      }
 
       var i
       for (i = 0; i < arguments.length; i++) {
