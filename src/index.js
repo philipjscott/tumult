@@ -35,18 +35,19 @@ function tumultFactory (seed) {
   for (i = 0; i < 256; i++) p[i + 256] = p[i]
   
   
-  function FixedLogger (target, method, count) {
-    var obj = { count: 0 }
-    var original = target[method]
-    target[method] = function () {
-      if (obj.count < count) {
-        obj.count++
-        return original.apply(this, ([].slice.call(arguments)))
+  function fixedLogger (target, method, count) {
+    var logger = {
+      count: 0,
+      log: function () {
+        if (this.count < count) {
+          this.count++
+          target[method].apply(this, ([].slice.call(arguments)))
+        }
       }
     }
-    return obj
+    return logger
   }
-  var spy = FixedLogger(console, 'log', 100)
+  var logger = fixedLogger(console, 'log', 100)
 
 
   var g1 = [ new Vec1(1), new Vec1(-1) ]
@@ -253,8 +254,8 @@ function tumultFactory (seed) {
   }
   // too many Ns
   function lerpN (ns, ds) {
-    console.log(ns)
-    console.log(ds)
+    logger.log('ns: ', ns)
+    logger.log('ds: ', ds)
     if (ds.length === 1) return lerp(ns[0], ns[1], ds[0])
     var ns1 = ns.slice(0, ns.length / 2)
     var ns2 = ns.slice(ns.length / 2)
