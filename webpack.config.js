@@ -3,7 +3,7 @@ const path = require('path')
 module.exports = {
   entry: './docs/demo.js',
   output: {
-    filename: 'bundle.js',
+    filename: 'tumult.js',
     path: path.resolve(__dirname, 'docs')
   },
   devtool: 'inline-source-map',

@@ -17,7 +17,7 @@ function fade (t) {
   return t * t * t * (10 + t * (-15 + t * 6))
 }
 export function seed (s) {
-  rng = rand.create(seed)
+  rng = rand.create(s)
   var i
   for (i = 0; i < 256; i++) p[i] = i
   for (i = 0; i < 256; i++) {
