@@ -1,6 +1,6 @@
 import terrapaint from 'terrapaint'
 import { seed, perlin2, perlinN } from '../src/index'
-seed(Math.random())
+seed()
 terrapaint(perlin2, 256, 256, {
   offset: true
 })
