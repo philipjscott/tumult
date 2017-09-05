@@ -1,9 +1,9 @@
 import terrapaint from 'terrapaint'
-import tumult from '../src/index'
-var noise = tumult(Math.random())
-terrapaint(noise.perlinN, 256, 256, {
+import { seed, perlin2, perlinN } from '../src/index'
+seed(Math.random())
+terrapaint(perlin2, 256, 256, {
   offset: true
 })
-terrapaint(noise.perlin2, 256, 256, {
+terrapaint(perlinN, 256, 256, {
   offset: true
 })
