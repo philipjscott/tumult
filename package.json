@@ -5,7 +5,7 @@
   "main": "./src/index.js",
   "scripts": {
     "webpack": "webpack",
-    "start": "webpack-dev-server -d --open"
+    "dev": "webpack-dev-server -d --open"
   },
   "keywords": [
     "noise",
