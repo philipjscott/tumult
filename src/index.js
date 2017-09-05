@@ -7,6 +7,20 @@ var rand = require('random-seed')
 // Noise algorithms by Ken Perlin
 // Uses "random-seed" package on NPM for seeding function
 
+
+function fixedLogger (target, method, count, debug) {
+  var logger = {
+    count: 0,
+    log: function () {
+      if (this.count < count && debug) {
+        this.count++
+        target[method].apply(this, ([].slice.call(arguments)))
+      }
+    }
+  }
+  return logger
+}
+
 function tumultFactory (seed) {
   var module = {}
   seed = seed || Math.random()
@@ -35,20 +49,6 @@ function tumultFactory (seed) {
   for (i = 0; i < 256; i++) p[i + 256] = p[i]
   
   
-  function fixedLogger (target, method, count) {
-    var logger = {
-      count: 0,
-      log: function () {
-        if (this.count < count) {
-          this.count++
-          target[method].apply(this, ([].slice.call(arguments)))
-        }
-      }
-    }
-    return logger
-  }
-  var logger = fixedLogger(console, 'log', 100)
-
 
   var g1 = [ new Vec1(1), new Vec1(-1) ]
   function grad1 (x) {
@@ -76,6 +76,7 @@ function tumultFactory (seed) {
     new Vec2(1, 0), new Vec2(1, 1), new Vec2(0, 1), new Vec2(-1, 1),
     new Vec2(-1, 0), new Vec2(-1, -1), new Vec2(0, -1), new Vec2(1, -1)
   ]
+  var g2 = [new Vec2(-1, 0), new Vec2(0, -1), new Vec2(1, 0), new Vec2(0, 1)]
   function grad2 (x, y) {
     var hash = p[x + p[y]] % g2.length
     return g2[hash]
@@ -252,24 +253,21 @@ function tumultFactory (seed) {
       gN[i] = new VecN(vec)
     }
   }
-  // too many Ns
   function lerpN (ns, ds) {
-    logger.log('ns: ', ns)
-    logger.log('ds: ', ds)
-    if (ds.length === 1) return lerp(ns[0], ns[1], ds[0])
-    var ns1 = ns.slice(0, ns.length / 2)
-    var ns2 = ns.slice(ns.length / 2)
+    // don't forget to fade you dummy
+    if (ds.length === 1) return lerp(ns[0], ns[1], fade(ds[0]))
+    var ns1 = ns.slice(0, Math.floor(ns.length / 2))
+    var ns2 = ns.slice(Math.ceil(ns.length / 2))
     return lerp(
-      lerpN(ns1, ds.slice(1)),
-      lerpN(ns2, ds.slice(1)),
-      fade(ds[0])
+      lerpN(ns1, ds.slice(0, ds.length - 1)),
+      lerpN(ns2, ds.slice(0, ds.length - 1)),
+      fade(ds[ds.length - 1])
     )
   }
   function hashN (gs) {
     if (gs.length === 1) return p[gs[0]]
     return p[gs[0] + hashN(gs.slice(1))]
   }
-  // could be this func, idk
   function getNs (dim, gs, ds) {
     var ns = []
     for (var i = 0; i < (2 << (dim - 1)); i++) {
@@ -284,7 +282,7 @@ function tumultFactory (seed) {
         }
         temp = temp >> 1
       }
-      ns[i] = gN[hashN(gsPerm) % (dim * 2)].dot(dsPerm)
+      ns[i] = gN[hashN(gsPerm) % gN.length].dot(dsPerm)
     }
     return ns
   }
@@ -305,14 +303,15 @@ function tumultFactory (seed) {
     if (gN.length === 0) {
       generateGN(arguments.length)
     }
-
+    
     var i
     for (i = 0; i < arguments.length; i++) {
       gs[i] = Math.trunc(arguments[i]) % 256
       ds[i] = arguments[i] - gs[i]
     }
     var ns = getNs(arguments.length, gs, ds)
-    return lerpN(ns, ds.reverse())
+    var res = lerpN(ns, ds)
+    return res
   }
 
   return module
