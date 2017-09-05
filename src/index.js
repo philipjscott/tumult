@@ -33,6 +33,20 @@ function tumultFactory (seed) {
     p[r] = temp
   }
   for (i = 0; i < 256; i++) p[i + 256] = p[i]
+  
+  
+  function FixedLogger (target, method, count) {
+    var obj = { count: 0 }
+    var original = target[method]
+    target[method] = function () {
+      if (obj.count < count) {
+        obj.count++
+        return original.apply(this, ([].slice.call(arguments)))
+      }
+    }
+    return obj
+  }
+  var spy = FixedLogger(console, 'log', 100)
 
 
   var g1 = [ new Vec1(1), new Vec1(-1) ]
@@ -227,15 +241,20 @@ function tumultFactory (seed) {
 
 
   var gN = []
-  function generateGN (count) {
-    for (var i = 0; i < count * 2; i++) {
-      var vec = new Array(count).fill(0)
-      vec[i % count] = i / count >= 1 ? 1 : -1
+  // generates a gradient look up table, where each gradient has one positive
+  // or negative unit vector in one dimension. For example, calling perlin with 2 dims:
+  // [1, 0], [-1, 0], [0, 1], [0, -1]
+  function generateGN (dim) {
+    for (var i = 0; i < dim * 2; i++) {
+      var vec = new Array(dim).fill(0)
+      vec[i % dim] = i / dim >= 1 ? 1 : -1
       gN[i] = new VecN(vec)
     }
   }
   // too many Ns
   function lerpN (ns, ds) {
+    console.log(ns)
+    console.log(ds)
     if (ds.length === 1) return lerp(ns[0], ns[1], ds[0])
     var ns1 = ns.slice(0, ns.length / 2)
     var ns2 = ns.slice(ns.length / 2)
@@ -249,21 +268,22 @@ function tumultFactory (seed) {
     if (gs.length === 1) return p[gs[0]]
     return p[gs[0] + hashN(gs.slice(1))]
   }
-  function getNs (count, gs, ds) {
+  // could be this func, idk
+  function getNs (dim, gs, ds) {
     var ns = []
-    for (var i = 0; i < (2 << (count - 1)); i++) {
+    for (var i = 0; i < (2 << (dim - 1)); i++) {
       var gsPerm = gs.slice()
       var dsPerm = ds.slice()
       var temp = i
 
-      for (var j = 0; j < count; j++) {
+      for (var j = 0; j < dim; j++) {
         if (temp & 1) {
           gsPerm[j] += 1
           dsPerm[j] -= 1
         }
         temp = temp >> 1
       }
-      ns[i] = gN[hashN(gsPerm) % (count * 2)].dot(dsPerm)
+      ns[i] = gN[hashN(gsPerm) % (dim * 2)].dot(dsPerm)
     }
     return ns
   }
