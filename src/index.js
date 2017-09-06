@@ -52,6 +52,20 @@ export function perlin1 (x) {
   return lerp(n0, n1, fade(dx))
 }
 
+function cut1 (x) {
+  var t = 1 - x * x
+  return t * t * t * t
+}
+export function simplex1 (x) {
+  var gx = Math.trunc(x) % 256
+  var dx = x - gx
+
+  var n0 = cut1(dx) * grad1(gx).dot(dx)
+  var n1 = cut1(dx - 1) * grad1(gx + 1).dot(dx - 1)
+
+  return 0.5 * (n0 + n1)
+}
+
 
 var g2 = [
   new Vec2(1, 0), new Vec2(1, 1), new Vec2(0, 1), new Vec2(-1, 1),
@@ -85,6 +99,41 @@ export function perlin2 (x, y) {
     lerp(n01, n11, fade(dx)),
     fade(dy)
   )
+}
+
+
+var S2_TO_C = 0.5 * (Math.sqrt(3) - 1)
+var C_TO_S2 = (3 - Math.sqrt(3)) / 6
+function cut2 (x, y) {
+  var t = 0.5 - x * x - y * y
+  return t >= 0 ? t * t * t * t : 0
+}
+export function simplex2 (x, y) {
+  var skew = (x + y) * S2_TO_C
+  var i = Math.trunc(x + skew)
+  var j = Math.trunc(y + skew)
+
+  var unskew = (i + j) * C_TO_S2
+  var gx = i - unskew
+  var gy = j - unskew
+  
+  var dx0 = x - gx
+  var dy0 = y - gy
+
+  var di = dx0 > dy0 ? 1 : 0
+  var dj = dx0 > dy0 ? 0 : 1
+
+  // why isn't it + di - C_TO_S2?
+  var dx1 = dx0 - di + C_TO_S2
+  var dy1 = dy0 - dj + C_TO_S2
+  var dx2 = dx0 - 1 + 2 * C_TO_S2
+  var dy2 = dy0 - 1 + 2 * C_TO_S2
+  
+  var n0 = cut2(dx0, dy0) * grad2(i, j).dot(dx0, dy0)
+  var n1 = cut2(dx1, dy1) * grad2(i + di, j + dj).dot(dx1, dy1)
+  var n2 = cut2(dx2, dy2) * grad2(i + 1, j + 1).dot(dx2, dy2)
+
+  return 70 * (n0 + n1 + n2)
 }
 
 
@@ -296,6 +345,8 @@ export function perlinN () {
 
 export default {
   seed: seed,
+  simplex1: simplex1,
+  simplex2: simplex2,
   perlin1: perlin1,
   perlin2: perlin2,
   perlin3: perlin3,
