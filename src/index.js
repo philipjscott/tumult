@@ -44,19 +44,29 @@ class Noise {
     for (i = 0; i < 256; i++) p[i + 256] = p[i]
   }
   transform (fn) {
-    return (...args) => {
-      return fn(this.gen.apply(this, args))
+    return (...dims) => {
+      return fn.call(this, ...dims)
     }
   }
-  /*octavate (octaves, options) {
-    options = options || {}
-    var persistance = options.persistance || 2
-    var period = options.period || 6
-
-    return function (...args) {
-      // fn(this.gen.apply(args)
+  fractal (...args) {
+    var iters = args[0]
+    var dims = args.slice(1)
+    var val = 0
+    for (var i = 0; i < iters; i++) {
+      var w = 1 << i
+      val += this.gen.apply(this, dims.map(x => x * w)) / w
     }
-  }*/
+    return val
+  }
+  octavate (octaves) {
+    return this.transform(function (...dims) {
+      var max = 0
+      for (var i = 0; i < octaves; i++) {
+        max += 1 / (1 << i)
+      }
+      return this.fractal(...[octaves].concat(dims)) / max
+    })
+  }
 }
 
 
