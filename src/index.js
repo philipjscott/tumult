@@ -45,27 +45,22 @@ class Noise {
   }
   transform (fn) {
     return (...dims) => {
-      return fn.call(this, ...dims)
+      return fn.apply(this, dims)
     }
   }
-  fractal (...args) {
-    var iters = args[0]
+  octavate (...args) {
+    var octaves = args[0]
     var dims = args.slice(1)
     var val = 0
-    for (var i = 0; i < iters; i++) {
+    var max = 0
+    for (var i = 0; i < octaves; i++) {
       var w = 1 << i
       val += this.gen.apply(this, dims.map(x => x * w)) / w
     }
-    return val
-  }
-  octavate (octaves) {
-    return this.transform(function (...dims) {
-      var max = 0
-      for (var i = 0; i < octaves; i++) {
-        max += 1 / (1 << i)
-      }
-      return this.fractal(...[octaves].concat(dims)) / max
-    })
+    for (var i = 0; i < octaves; i++) {
+      max += 1 / (1 << i)
+    }
+    return val / max
   }
 }
 
