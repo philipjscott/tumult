@@ -7,27 +7,51 @@
 
 
 var rand = require('random-seed')
-
 var rng
-var p = new Uint8Array(512)
 function lerp (a, b, t) {
   return a * (1 - t) + b * t
 }
 function fade (t) {
   return t * t * t * (10 + t * (-15 + t * 6))
 }
-export function seed (s) {
-  s = s || Math.random()
-  rng = rand.create(s)
-  var i
-  for (i = 0; i < 256; i++) p[i] = i
-  for (i = 0; i < 256; i++) {
-    var r = rng(256)
-    var temp = p[i]
-    p[i] = p[r]
-    p[r] = temp
+function cut (...args) {
+  const t = 1 - args.reduce((sum, val) => sum + val * val, 0)
+  return t * t * t * t
+}
+
+class Noise {
+  constructor (s) {
+    p = new Uint8Array(512)
+    this.seed(s)
   }
-  for (i = 0; i < 256; i++) p[i + 256] = p[i]
+  gen () {}
+  seed (s) {
+    s = s || Math.random()
+    rng = rand.create(s)
+    var i
+    for (i = 0; i < 256; i++) this.p[i] = i
+    for (i = 0; i < 256; i++) {
+      var r = rng(256)
+      var temp = this.p[i]
+      this.p[i] = this.p[r]
+      this.p[r] = temp
+    }
+    for (i = 0; i < 256; i++) this.p[i + 256] = p[i]
+  }
+  transform (fn) {
+    return function (...args) {
+      return fn(this.gen.apply(args))
+    }
+  }
+  /*octavate (octaves, options) {
+    options = options || {}
+    var persistance = options.persistance || 2
+    var period = options.period || 6
+
+    return function (...args) {
+      // fn(this.gen.apply(args)
+    }
+  }*/
 }
 
 
@@ -42,30 +66,38 @@ function Vec1 (x) {
 Vec1.prototype.dot = function (x) {
   return this.x * x
 }
-export function perlin1 (x) {
-  var gx = Math.trunc(x) % 256
-  var dx = x - gx
+export class Perlin1 extends Noise {
+  constructor (s) {
+    super(s)
+  }
+  gen (x) {
+    var gx = Math.floor(x) % 256
+    var dx = x - gx
 
-  var n0 = grad1(gx).dot(dx)
-  var n1 = grad1(gx + 1).dot(dx - 1)
+    var n0 = grad1(gx).dot(dx)
+    var n1 = grad1(gx + 1).dot(dx - 1)
 
-  return lerp(n0, n1, fade(dx))
+    return lerp(n0, n1, fade(dx))
+  }
 }
+export class Simplex1 extends Noise {
+  constructor (s) {
+    super(s)
+  }
+  gen (x) {
+    var gx = Math.floor(x) % 256
+    var dx = x - gx
 
-function cut1 (x) {
-  var t = 1 - x * x
-  return t * t * t * t
+    var n0 = cut(dx) * grad1(gx).dot(dx)
+    var n1 = cut(dx - 1) * grad1(gx + 1).dot(dx - 1)
+
+    return 0.5 * (n0 + n1)
+  }
 }
-export function simplex1 (x) {
-  var gx = Math.trunc(x) % 256
-  var dx = x - gx
-
-  var n0 = cut1(dx) * grad1(gx).dot(dx)
-  var n1 = cut1(dx - 1) * grad1(gx + 1).dot(dx - 1)
-
-  return 0.5 * (n0 + n1)
-}
-
+// noise, noise1 noise2 noise3, 
+// then perlins, simplexes, etc
+// this will be done when you want to split files
+// typed array look up table?
 
 var g2 = [
   new Vec2(1, 0), new Vec2(1, 1), new Vec2(0, 1), new Vec2(-1, 1),
@@ -82,58 +114,62 @@ function Vec2 (x, y) {
 Vec2.prototype.dot = function (x, y) {
   return this.x * x + this.y * y
 }
-export function perlin2 (x, y) {
-  var gx = Math.trunc(x) % 256
-  var gy = Math.trunc(y) % 256
-
-  var dx = x - gx
-  var dy = y - gy
-
-  var n00 = grad2(gx, gy).dot(dx, dy)
-  var n10 = grad2(gx + 1, gy).dot(dx - 1, dy)
-  var n01 = grad2(gx, gy + 1).dot(dx, dy - 1)
-  var n11 = grad2(gx + 1, gy + 1).dot(dx - 1, dy - 1)
-
-  return lerp(
-    lerp(n00, n10, fade(dx)),
-    lerp(n01, n11, fade(dx)),
-    fade(dy)
-  )
-}
-
-
 var S2_TO_C = 0.5 * (Math.sqrt(3) - 1)
 var C_TO_S2 = (3 - Math.sqrt(3)) / 6
-function cut2 (x, y) {
-  var t = 0.5 - x * x - y * y
-  return t >= 0 ? t * t * t * t : 0
+export class Perlin2 extends Noise {
+  constructor (s) {
+    super(s)
+  }
+  gen (x, y) {
+    var gx = Math.trunc(x) % 256
+    var gy = Math.trunc(y) % 256
+
+    var dx = x - gx
+    var dy = y - gy
+
+    var n00 = grad2(gx, gy).dot(dx, dy)
+    var n10 = grad2(gx + 1, gy).dot(dx - 1, dy)
+    var n01 = grad2(gx, gy + 1).dot(dx, dy - 1)
+    var n11 = grad2(gx + 1, gy + 1).dot(dx - 1, dy - 1)
+
+    return lerp(
+      lerp(n00, n10, fade(dx)),
+      lerp(n01, n11, fade(dx)),
+      fade(dy)
+    )
+  }
 }
-export function simplex2 (x, y) {
-  var skew = (x + y) * S2_TO_C
-  var i = Math.trunc(x + skew)
-  var j = Math.trunc(y + skew)
+export class Simplex2 extends Noise {
+  constructor (s) {
+    super(s)
+  }
+  gen (x, y) {
+    var skew = (x + y) * S2_TO_C
+    var i = Math.trunc(x + skew)
+    var j = Math.trunc(y + skew)
 
-  var unskew = (i + j) * C_TO_S2
-  var gx = i - unskew
-  var gy = j - unskew
-  
-  var dx0 = x - gx
-  var dy0 = y - gy
+    var unskew = (i + j) * C_TO_S2
+    var gx = i - unskew
+    var gy = j - unskew
 
-  var di = dx0 > dy0 ? 1 : 0
-  var dj = dx0 > dy0 ? 0 : 1
+    var dx0 = x - gx
+    var dy0 = y - gy
 
-  // why isn't it + di - C_TO_S2?
-  var dx1 = dx0 - di + C_TO_S2
-  var dy1 = dy0 - dj + C_TO_S2
-  var dx2 = dx0 - 1 + 2 * C_TO_S2
-  var dy2 = dy0 - 1 + 2 * C_TO_S2
-  
-  var n0 = cut2(dx0, dy0) * grad2(i, j).dot(dx0, dy0)
-  var n1 = cut2(dx1, dy1) * grad2(i + di, j + dj).dot(dx1, dy1)
-  var n2 = cut2(dx2, dy2) * grad2(i + 1, j + 1).dot(dx2, dy2)
+    var di = dx0 > dy0 ? 1 : 0
+    var dj = dx0 > dy0 ? 0 : 1
 
-  return 70 * (n0 + n1 + n2)
+    // why isn't it + di - C_TO_S2?
+    var dx1 = dx0 - di + C_TO_S2
+    var dy1 = dy0 - dj + C_TO_S2
+    var dx2 = dx0 - 1 + 2 * C_TO_S2
+    var dy2 = dy0 - 1 + 2 * C_TO_S2
+
+    var n0 = cut(dx0, dy0) * grad2(i, j).dot(dx0, dy0)
+    var n1 = cut(dx1, dy1) * grad2(i + di, j + dj).dot(dx1, dy1)
+    var n2 = cut(dx2, dy2) * grad2(i + 1, j + 1).dot(dx2, dy2)
+
+    return 70 * (n0 + n1 + n2)
+  }
 }
 
 
@@ -154,37 +190,42 @@ function Vec3 (x, y, z) {
 Vec3.prototype.dot = function (x, y, z) {
   return this.x * x + this.y * y + this.z * z
 }
-export function perlin3 (x, y, z) {
-  var gx = Math.trunc(x) % 256
-  var gy = Math.trunc(y) % 256
-  var gz = Math.trunc(z) % 256
+export class Perlin3 extends Noise {
+  constructor (s) {
+    super(s)
+  }
+  gen (x, y, z) {
+    var gx = Math.trunc(x) % 256
+    var gy = Math.trunc(y) % 256
+    var gz = Math.trunc(z) % 256
 
-  var dx = x - gx
-  var dy = y - gy
-  var dz = z - gz
+    var dx = x - gx
+    var dy = y - gy
+    var dz = z - gz
 
-  var n000 = grad3(gx, gy, gz).dot(dx, dy, dz)
-  var n100 = grad3(gx + 1, gy, gz).dot(dx - 1, dy, dz)
-  var n010 = grad3(gx, gy + 1, gz).dot(dx, dy - 1, dz)
-  var n110 = grad3(gx + 1, gy + 1, gz).dot(dx - 1, dy - 1, dz)
-  var n001 = grad3(gx, gy, gz + 1).dot(dx, dy, dz - 1)
-  var n101 = grad3(gx + 1, gy, gz + 1).dot(dx - 1, dy, dz - 1)
-  var n011 = grad3(gx, gy + 1, gz + 1).dot(dx, dy - 1, dz - 1)
-  var n111 = grad3(gx + 1, gy + 1, gz + 1).dot(dx - 1, dy - 1, dz - 1)
+    var n000 = grad3(gx, gy, gz).dot(dx, dy, dz)
+    var n100 = grad3(gx + 1, gy, gz).dot(dx - 1, dy, dz)
+    var n010 = grad3(gx, gy + 1, gz).dot(dx, dy - 1, dz)
+    var n110 = grad3(gx + 1, gy + 1, gz).dot(dx - 1, dy - 1, dz)
+    var n001 = grad3(gx, gy, gz + 1).dot(dx, dy, dz - 1)
+    var n101 = grad3(gx + 1, gy, gz + 1).dot(dx - 1, dy, dz - 1)
+    var n011 = grad3(gx, gy + 1, gz + 1).dot(dx, dy - 1, dz - 1)
+    var n111 = grad3(gx + 1, gy + 1, gz + 1).dot(dx - 1, dy - 1, dz - 1)
 
-  return lerp(
-    lerp(
-      lerp(n000, n100, dx),
-      lerp(n010, n110, dx),
-      fade(dy)
-    ),
-    lerp(
-      lerp(n001, n101, dx),
-      lerp(n011, n111, dx),
-      fade(dy)
-    ),
-    fade(dz)
-  )
+    return lerp(
+      lerp(
+        lerp(n000, n100, dx),
+        lerp(n010, n110, dx),
+        fade(dy)
+      ),
+      lerp(
+        lerp(n001, n101, dx),
+        lerp(n011, n111, dx),
+        fade(dy)
+      ),
+      fade(dz)
+    )
+  }
 }
 
 
@@ -211,7 +252,11 @@ function Vec4 (x, y, z, t) {
 Vec4.prototype.dot = function (x, y, z, t) {
   return this.x * x + this.y * y + this.z * z + this.t * t
 }
-export function perlin4 (x, y, z, t) {
+export class Perlin4 extends Noise {
+  constructor (s) {
+    super(s)
+  }
+  gen (x, y, z, t) {
   var gx = Math.trunc(x) % 256
   var gy = Math.trunc(y) % 256
   var gz = Math.trunc(z) % 256
@@ -268,6 +313,7 @@ export function perlin4 (x, y, z, t) {
     ),
     fade(dt)
   )
+  }
 }
 
 
@@ -324,34 +370,38 @@ VecN.prototype.dot = function (R) {
   }
   return val
 }
-export function perlinN () {
-  var gs = []
-  var ds = []
-
-  if (gN.length === 0) {
-    generateGN(arguments.length)
+export class PerlinN extends Noise {
+  constructor (s) {
+    super(s)
   }
+  gen (...args) {
+    var gs = []
+    var ds = []
 
-  var i
-  for (i = 0; i < arguments.length; i++) {
-    gs[i] = Math.trunc(arguments[i]) % 256
-    ds[i] = arguments[i] - gs[i]
+    if (gN.length === 0) {
+      generateGN(args.length)
+    }
+
+    var i
+    for (i = 0; i < args.length; i++) {
+      gs[i] = Math.trunc(args[i]) % 256
+      ds[i] = args[i] - gs[i]
+    }
+    var ns = getNs(args.length, gs, ds)
+    var res = lerpN(ns, ds)
+    return res
   }
-  var ns = getNs(arguments.length, gs, ds)
-  var res = lerpN(ns, ds)
-  return res
 }
 
 
 export default {
-  seed: seed,
-  simplex1: simplex1,
-  simplex2: simplex2,
-  perlin1: perlin1,
-  perlin2: perlin2,
-  perlin3: perlin3,
-  perlin4: perlin4,
-  perlinN: perlinN
+  Simplex1: Simplex1,
+  Simplex2: Simplex2,
+  Perlin1: Perlin1,
+  Perlin2: Perlin2,
+  Perlin3: Perlin3,
+  Perlin4: Perlin4,
+  PerlinN: PerlinN
 }
 
 
