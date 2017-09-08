@@ -16,6 +16,8 @@
   "author": "Philip Scott",
   "license": "MIT",
   "dependencies": {
+    "buble": "^0.15.2",
+    "buble-loader": "^0.4.1",
     "random-seed": "^0.3.0"
   },
   "devDependencies": {

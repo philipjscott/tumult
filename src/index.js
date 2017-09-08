@@ -14,14 +14,19 @@ function lerp (a, b, t) {
 function fade (t) {
   return t * t * t * (10 + t * (-15 + t * 6))
 }
-function cut (...args) {
-  const t = 1 - args.reduce((sum, val) => sum + val * val, 0)
-  return t * t * t * t
+function falloff (...args) {
+  var dims = args.slice(1)
+  const t = args[0] - dims.reduce((sum, val) => {
+    return sum + val * val
+  }, 0)
+  return t * t * t * t 
 }
+var cut1 = falloff.bind(null, 1)
+var cut = falloff.bind(null, 0.5)
+var p = new Uint8Array(512)
 
 class Noise {
   constructor (s) {
-    p = new Uint8Array(512)
     this.seed(s)
   }
   gen () {}
@@ -29,18 +34,18 @@ class Noise {
     s = s || Math.random()
     rng = rand.create(s)
     var i
-    for (i = 0; i < 256; i++) this.p[i] = i
+    for (i = 0; i < 256; i++) p[i] = i
     for (i = 0; i < 256; i++) {
       var r = rng(256)
-      var temp = this.p[i]
-      this.p[i] = this.p[r]
-      this.p[r] = temp
+      var temp = p[i]
+      p[i] = p[r]
+      p[r] = temp
     }
-    for (i = 0; i < 256; i++) this.p[i + 256] = p[i]
+    for (i = 0; i < 256; i++) p[i + 256] = p[i]
   }
   transform (fn) {
-    return function (...args) {
-      return fn(this.gen.apply(args))
+    return (...args) => {
+      return fn(this.gen.apply(this, args))
     }
   }
   /*octavate (octaves, options) {
@@ -88,8 +93,8 @@ export class Simplex1 extends Noise {
     var gx = Math.floor(x) % 256
     var dx = x - gx
 
-    var n0 = cut(dx) * grad1(gx).dot(dx)
-    var n1 = cut(dx - 1) * grad1(gx + 1).dot(dx - 1)
+    var n0 = cut1(dx) * grad1(gx).dot(dx)
+    var n1 = cut1(dx - 1) * grad1(gx + 1).dot(dx - 1)
 
     return 0.5 * (n0 + n1)
   }

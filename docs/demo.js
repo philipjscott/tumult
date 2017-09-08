@@ -1,10 +1,17 @@
 import terrapaint from 'terrapaint'
-import { seed, simplex2, perlinN } from '../src/index'
-seed()
-terrapaint(simplex2, 256, 256, {
+import { Simplex2, Perlin2 } from '../src/index'
+
+var seed = Math.random()
+var simplex = new Simplex2(seed).transform(function(x) {
+  return Math.sin(x * Math.PI / 2)
+  //return x
+})
+var perlin = new Perlin2(seed)
+
+terrapaint(simplex, 256, 256, {
   offset: true
 })
-terrapaint(perlinN, 256, 256, {
+terrapaint(perlin.gen, 256, 256, {
   offset: true
 })
 
