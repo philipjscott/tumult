@@ -38,21 +38,19 @@ $('#gen-noise').addEventListener('click', function () {
   }
 
   var transformedNoise = simplex.transform(function(x, y) {
-    return transformFn(x, y)
-  })
-  try {
-    for (var x = 0; i < 128; i++) {
-      transformedNoise(x, 128)
+    try {
+      var val = transformFn(x, y)
+    } catch (e) {
+      alert(`
+        Your function created a run-time error. Please ensure
+        the period of the noise function is greater than one
+        (ie. divide x and y by a value, like 4 or 16, before
+        passing it to n()).
+      `)
+      throw 'Runtime error'
     }
-  } catch (e) {
-    alert(`
-      Your function created a run-time error. Please ensure
-      the period of the noise function is greater than one
-      (ie. divide x and y by a value, like 4 or 16, before
-      passing it to n()).
-    `)
-  }
-
+    return val
+  })
   var map = terrapaint.map(transformedNoise, {
     offset: true,
     period: 1,
