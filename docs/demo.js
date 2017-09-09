@@ -26,11 +26,33 @@ $('#gen-noise').addEventListener('click', function () {
     var e = Math.E
     return ${evalStr}
   `
-  var transformFn = (new Function('x', 'y', fnBody)).bind(simplex)
+  try {
+    var transformFn = (new Function('x', 'y', fnBody)).bind(simplex)
+  } catch (e) {
+    alert(`
+      Something is wrong with the syntax of your function.
+      Please ensure all the parentheses are closed and that you're
+      using the correct functions and variable names.
+    `)
+    return
+  }
 
   var transformedNoise = simplex.transform(function(x, y) {
     return transformFn(x, y)
   })
+  try {
+    for (var x = 0; i < 128; i++) {
+      transformedNoise(x, 128)
+    }
+  } catch (e) {
+    alert(`
+      Your function created a run-time error. Please ensure
+      the period of the noise function is greater than one
+      (ie. divide x and y by a value, like 4 or 16, before
+      passing it to n()).
+    `)
+  }
+
   var map = terrapaint.map(transformedNoise, {
     offset: true,
     period: 1,
