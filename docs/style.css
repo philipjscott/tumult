@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css?family=Slabo+27px|Source+Sans+Pro');
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+main {
+  text-align: center;
+  color: #222;
+  max-width: 600px;
+  font-family: 'Slabo 27px', serif;
+  padding: 20px;
+  margin: 20px auto 0 auto;
+}
+ul {
+  text-align: left;
+  margin-left: 10px;
+}
+
+p, ul, li {
+  line-height: 170%;
+}
+h1, h2, h3 {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+input[type='text'] {
+  border: 0;
+  border-bottom: 1px solid #222;
+  font-family: 'Source Sans Pro', serif;
+  text-align: center;
+  color: #222;
+  font-size: 1em;
+}
+button {
+  color: #222;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 1em;
+  border: 1px solid #222;
+  padding: 5px 20px;
+  text-transform: uppercase;
+  background-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color 0.3s, background-color 0.3s, border 0.3s;
+}
+button:hover, button:active {
+  background-color: #222;
+  border: 1px solid transparent;
+  color: #fff;
+}
+
+h1 { font-size: 3em }
+h3 { font-size: 1em }
+#lib-name { margin: 0 0 10px 0 }
+#desc { margin: 0 0 10px 0 }
+#author { margin: 0 0 40px 0 }
+#noise-canvas { margin-bottom: 10px }
+#transform-demo { font-family: 'Source Sans Pro', sans-serif }
+#gen-noise { margin: 15px 0 20px 0 }
+
+@media only screen and (min-width: 0) {
+  main { font-size: 100% }
+  #noise-canvas {
+    width: 128px;
+    height: 128px;
+  }
+  #logo { margin-bottom: 10px }
+}
+@media only screen and (min-width: 340px) {
+  main { font-size: 120% }
+  #noise-canvas {
+    width: 256px;
+    height: 256px;
+  }
+  #logo { margin-bottom: 0 }
+}
+

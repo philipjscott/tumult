@@ -2,55 +2,64 @@
 <html>
   <head>
     <title>Tumult</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Tumult</h1>
-    <h3>A Javascript noise library</h3>
-    <canvas id="noise-canvas" height="256" width="256"></canvas>
-    <form>
-      f(x, y) = <input type="text" id="eval-str" value="n(x/32,y/32)"/><br />
-      <button id="gen-noise" type="button">Generate</button>
-    </form>
-    <p>
-      Tumult is a noise library, supporting simplex[1-2],
-      perlin[1-4], and perlinN (perlin noise in any arbitrary
-      dimension). It also provides helper functions to 
-      transform noise:
-    </p>
-    <ul>
-      <li>
-        .octavate(octaves, x, y...): Applies
-        <a href="https://thebookofshaders.com/13/">fractal Brownian motion</a>,
-        summing iterations of the noise. With each
-        successive iteration, the frequency is doubled
-        and the weight is halved.
-      </li>
-      <li>
-        .transform(fn): Returns a new transformed noise
-        function given the transformation function. The passed
-        transformation function is bound to the 'this' object
-        of the noise generator, therefore you can call
-        'this.octavate' and 'this.gen' to generate the noise.
-      </li>
-    </ul>
-    <p>
-      You can try the transform function by entering your
-      transformation function. Below are some functions and variables
-      you can use:
-    </p>
-    <ul>
-      <li>n(x, y) - The noise function. In this case, it's Simplex2</li>
-      <li>f(octaves, x, y) - The octavate, or 'F'ractal function.
-      <li>sin(x)</li>
-      <li>cos(x)</li>
-      <li>abs(x)</li>
-      <li>pow(radix, exponent)</li>
-      <li>pi</li>
-      <li>e</li>
-    </ul>
-    <p>
-      Alternatively, you can use vanilla Javascript code.
-    </p>
-      </body>
-  <script src="bundle.js"></script>
-</html>
+    <main>
+      <img id="logo" src="./assets/logo.png"/>
+      <h1 id="lib-name">Tumult</h1>
+            <h2 id="desc">A Javascript noise library</h2>
+      <h3 id="author">Philip Scott | ScottyFillups</h3>
+      <canvas id="noise-canvas"></canvas>
+      <form id="transform-demo">
+        f(x, y) = <input type="text" id="eval-str" value="sin((x + n(x/64,y/64)) * 20)"/><br />
+        <button id="gen-noise" type="button">Generate</button>
+      </form>
+      <p>
+        Tumult is a noise library, supporting simplex[1-2],
+        perlin[1-4], and perlinN (perlin noise in any arbitrary
+        dimension). It provides the following methods:
+      </p>
+      <ul>
+        <li>
+          .gen(x, y...): Generates a noise value
+        </li>
+        <li>
+          .octavate(octaves, x, y...): Applies
+          <a href="https://thebookofshaders.com/13/">fractal Brownian motion</a>,
+          summing iterations of the noise. With each
+          successive iteration, the frequency is doubled
+          and the weight is halved.
+        </li>
+        <li>
+          .transform(fn): Returns a new transformed noise
+          function given the transformation function. The passed
+          transformation function is bound to the 'this' object
+          of the noise generator, therefore you can call
+          'this.octavate' and 'this.gen' to generate the noise.
+        </li>
+      </ul>
+      <p>
+        You can try the transform function by entering your own
+        transformation function. Below are some functions and variables
+        you can use:
+      </p>
+      <ul>
+        <li>n(x, y) - The noise function. In this case, it's Simplex2</li>
+        <li>f(octaves, x, y) - The octavate, or 'F'ractal function.
+          <li>sin(x)</li>
+          <li>cos(x)</li>
+          <li>abs(x)</li>
+          <li>pow(radix, exponent)</li>
+          <li>pi</li>
+          <li>e</li>
+        </ul>
+        <p>
+          Alternatively, you can use vanilla Javascript code (eg. Math.abs() instead of abs(), this.gen() instead of n(), etc.).
+        </p>
+      </main>
+    </body>
+
+    <script src="bundle.js"></script>
+  </html>
