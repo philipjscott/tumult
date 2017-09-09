@@ -18,11 +18,11 @@
   "dependencies": {
     "buble": "^0.15.2",
     "buble-loader": "^0.4.1",
-    "random-seed": "^0.3.0"
+    "random-seed": "^0.3.0",
+    "terrapaint": "^2.0.0"
   },
   "devDependencies": {
     "browserify": "^14.4.0",
-    "terrapaint": "^1.0.2",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"
   },
