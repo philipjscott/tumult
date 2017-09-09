@@ -2992,9 +2992,9 @@ tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-terrapaint@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/terrapaint/-/terrapaint-2.0.0.tgz#b5f55f4c83066b14d872f6d56e25bcbc2ddd9f7f"
+terrapaint@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/terrapaint/-/terrapaint-2.0.1.tgz#11764a32a40e04973d3e2d59b453b7bcb80cfabd"
 
 through2@^2.0.0:
   version "2.0.3"

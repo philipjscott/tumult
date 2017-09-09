@@ -19,7 +19,7 @@
     "buble": "^0.15.2",
     "buble-loader": "^0.4.1",
     "random-seed": "^0.3.0",
-    "terrapaint": "^2.0.0"
+    "terrapaint": "^2.0.1"
   },
   "devDependencies": {
     "browserify": "^14.4.0",
