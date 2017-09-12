@@ -1,12 +1,12 @@
 import { Noise } from '../util/Noise'
-import { gN, lerpN, getNs, generateGN } from '../util/Nd'
+import { gN, lerpN, getNs as getN, generateGN } from '../util/Nd'
 
 export default class PerlinN extends Noise {
-  constructor (s) {
+  constructor(s) {
     super(s)
   }
-  gen (...args) {
-    var getNs = getNs.bind(null, this.p)
+  gen(...args) {
+    var getNs = getN.bind(null, this.p)
     var gs = []
     var ds = []
 

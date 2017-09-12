@@ -1,13 +1,13 @@
 import { Noise } from '../util/Noise'
-import { grad4 } from '../util/4d'
+import { grad4 as grad } from '../util/4d'
 import { fade, lerp } from '../util/math'
 
 export default class Perlin4 extends Noise {
-  constructor (s) {
+  constructor(s) {
     super(s)
   }
-  gen (x, y, z, t) {
-    var grad4 = grad4.bind(null, this.p)
+  gen(x, y, z, t) {
+    var grad4 = grad.bind(null, this.p)
     var gx = Math.trunc(x) % 256
     var gy = Math.trunc(y) % 256
     var gz = Math.trunc(z) % 256

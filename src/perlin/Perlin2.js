@@ -1,13 +1,13 @@
 import { Noise } from '../util/Noise'
-import { grad2 } from '../util/2d'
+import { grad2 as grad } from '../util/2d'
 import { fade, lerp } from '../util/math'
 
 export default class Perlin2 extends Noise {
-  constructor (s) {
+  constructor(s) {
     super(s)
   }
-  gen (x, y) {
-    var grad2 = grad2.bind(null, this.p)
+  gen(x, y) {
+    var grad2 = grad.bind(null, this.p)
     var gx = Math.trunc(x) % 256
     var gy = Math.trunc(y) % 256
 
