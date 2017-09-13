@@ -3,10 +3,10 @@ import { grad2 as grad } from '../util/2d'
 import { fade, lerp } from '../util/math'
 
 export default class Perlin2 extends Noise {
-  constructor(s) {
+  constructor (s) {
     super(s)
   }
-  gen(x, y) {
+  gen (x, y) {
     var grad2 = grad.bind(null, this.p)
     var gx = Math.trunc(x) % 256
     var gy = Math.trunc(y) % 256
@@ -26,4 +26,3 @@ export default class Perlin2 extends Noise {
     )
   }
 }
-

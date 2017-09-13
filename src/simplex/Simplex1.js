@@ -1,12 +1,12 @@
 import { Noise } from '../util/Noise'
 import { grad1 as grad } from '../util/1d'
-import { fade, lerp } from '../util/math'
+import { cut1 } from '../util/math'
 
 export default class Simplex1 extends Noise {
-  constructor(s) {
+  constructor (s) {
     super(s)
   }
-  gen(x) {
+  gen (x) {
     var grad1 = grad.bind(null, this.p)
     var gx = Math.floor(x) % 256
     var dx = x - gx
@@ -17,4 +17,3 @@ export default class Simplex1 extends Noise {
     return 0.5 * (n0 + n1)
   }
 }
-

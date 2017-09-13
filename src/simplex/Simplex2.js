@@ -3,10 +3,10 @@ import { grad2 as grad, S2_TO_C, C_TO_S2 } from '../util/2d'
 import { cut } from '../util/math'
 
 export default class Simplex2 extends Noise {
-  constructor(s) {
+  constructor (s) {
     super(s)
   }
-  gen(x, y) {
+  gen (x, y) {
     if (this === undefined) {
       console.log(this)
     }
@@ -38,4 +38,3 @@ export default class Simplex2 extends Noise {
     return 70 * (n0 + n1 + n2)
   }
 }
-
