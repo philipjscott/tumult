@@ -8,10 +8,10 @@
 
 `npm install tumult --save`
 
-Or,
+Or, you can find the library files in the [GitHub repo](https://github.com/ScottyFillups/tumult). Once you download it, you can do the following:
 
 ```html
-<script src="https://scottyfillups.github.io/tumult/tumult.js"></script>
+<script src="./tumult.min.js"></script>
 ```
 
 ### Usage

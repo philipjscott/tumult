@@ -1,5 +1,5 @@
 import terrapaint from 'terrapaint'
-import { Simplex2 } from '../src/index'
+import { Simplex2 } from '../dist/tumult.min'
 
 var seed = Math.random()
 var simplex = new Simplex2(seed)

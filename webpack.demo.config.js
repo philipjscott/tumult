@@ -1,12 +1,9 @@
 const path = require('path')
 
 module.exports = {
-  entry: {
-    bundle: './docs/demo.js',
-    tumult: './src/index.js'
-  },
+  entry: './docs/demo.js',
   output: {
-    filename: '[name].js',
+    filename: 'bundle.js',
     path: path.resolve(__dirname, 'docs')
   },
   devtool: 'inline-source-map',
