@@ -1,6 +1,6 @@
 {
   "name": "tumult",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "A javascript noise library",
   "main": "./src/index.js",
   "scripts": {
@@ -11,6 +11,8 @@
     "noise",
     "perlin",
     "perlin noise",
+    "simplex",
+    "simplex noise",
     "procedural generation"
   ],
   "author": "Philip Scott",
