@@ -1,5 +1,0 @@
-export { default as Perlin1 } from './Perlin1'
-export { default as Perlin2 } from './Perlin2'
-export { default as Perlin3 } from './Perlin3'
-export { default as Perlin4 } from './Perlin4'
-export { default as PerlinN } from './PerlinN'

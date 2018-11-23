@@ -1,13 +1,11 @@
 {
   "name": "tumult",
   "version": "3.0.3",
-  "description": "A javascript noise library",
-  "main": "./dist/tumult.min.js",
+  "description": "A Javascript noise library",
+  "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack.lib.config.js --env build",
-    "dev": "webpack-dev-server -d --config webpack.demo.config.js --open",
-    "demo": "webpack --config webpack.demo.config.js",
-    "lib": "webpack --config webpack.lib.config.js"
+    "lint": "standard",
+    "fix": "standard --fix"
   },
   "keywords": [
     "noise",
@@ -20,15 +18,12 @@
   "author": "Philip Scott",
   "license": "MIT",
   "dependencies": {
-    "buble": "^0.15.2",
-    "buble-loader": "^0.4.1",
-    "random-seed": "^0.3.0",
-    "terrapaint": "^2.0.1"
+    "random-seed": "^0.3.0"
   },
   "devDependencies": {
-    "browserify": "^14.4.0",
-    "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.7.1"
+    "parcel-bundler": "^1.10.3",
+    "standard": "^12.0.1",
+    "terrapaint": "^2.0.1"
   },
   "repository": {
     "type": "git",
