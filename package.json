@@ -8,7 +8,7 @@
     "fix": "standard --fix",
     "test": "echo \"No test specified!\"",
     "build": "parcel build --global tumult --out-dir dist --out-file tumult.min.js index.js",
-    "pages": "parcel build demo/index.html --out-dir pages",
+    "pages": "parcel build demo/index.html --out-dir pages --public-url '.'",
     "travis-deploy-once": "travis-deploy-once --pro",
     "semantic-release": "semantic-release"
   },
