@@ -3,8 +3,9 @@
 'use strict'
 
 import terrapaint from 'terrapaint'
-import { Simplex2 } from '../'
+import tumult from '../'
 
+const { Simplex2 } = tumult
 const seed = Math.random()
 const simplex = new Simplex2(seed)
 
