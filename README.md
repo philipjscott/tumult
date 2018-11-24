@@ -2,7 +2,6 @@
 
 Yet another **Javascript noise library**. Demonstrations [here](http://scottyfillups.github.io/tumult). Currently supports perlin noise for any arbitrary dimension and simplex[1-2]. Eventually going to support:
 * Simplex[3-4]
-* OpenSimplex _(Maybe)_
 
 ### Installation
 
