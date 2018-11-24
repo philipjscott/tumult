@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "standard",
-    "fix": "standard --fix"
+    "fix": "standard --fix",
+    "build": "parcel build --global tumult --out-dir dist --out-file tumult.min.js index.js",
+    "demo": "parcel build docs/index.html --out-dir demo"
   },
   "keywords": [
     "noise",
