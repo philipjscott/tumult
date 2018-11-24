@@ -1,6 +1,6 @@
 {
   "name": "tumult",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "A Javascript noise library",
   "main": "index.js",
   "scripts": {
