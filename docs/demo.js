@@ -1,11 +1,15 @@
+/* global alert */
+
+'use strict'
+
 import terrapaint from 'terrapaint'
-import { Simplex2 } from '../dist/tumult.min'
+import { Simplex2 } from '../'
 
-var seed = Math.random()
-var simplex = new Simplex2(seed)
+const seed = Math.random()
+const simplex = new Simplex2(seed)
 
-;(function init() {
-  var map = terrapaint.map(simplex.gen, {
+;(function () {
+  const map = terrapaint.map(simplex.gen, {
     offset: true,
     period: 64,
     thisArg: simplex
@@ -14,8 +18,8 @@ var simplex = new Simplex2(seed)
 })()
 
 $('#gen-noise').addEventListener('click', function () {
-  var evalStr = $('#eval-str').value
-  var fnBody = `
+  const evalStr = $('#eval-str').value
+  const fnBody = `
     var n = this.gen.bind(this)
     var f = this.octavate.bind(this)
     var sin = Math.sin
@@ -26,20 +30,24 @@ $('#gen-noise').addEventListener('click', function () {
     var e = Math.E
     return ${evalStr}
   `
+
+  let transformFn
+
   try {
-    var transformFn = (new Function('x', 'y', fnBody)).bind(simplex)
+    transformFn = (new Function('x', 'y', fnBody)).bind(simplex)
   } catch (e) {
     alert(`
       Something is wrong with the syntax of your function.
       Please ensure all the parentheses are closed and that you're
       using the correct functions and variable names.
     `)
+
     return
   }
 
-  var transformedNoise = simplex.transform(function(x, y) {
+  const transformedNoise = simplex.transform(function (x, y) {
     try {
-      var val = transformFn(x, y)
+      return transformFn(x, y)
     } catch (e) {
       alert(`
         Your function created a run-time error. Please ensure
@@ -47,11 +55,10 @@ $('#gen-noise').addEventListener('click', function () {
         (ie. divide x and y by a value, like 4 or 16, before
         passing it to n()).
       `)
-      throw 'Runtime error'
+      throw new Error('Runtime error')
     }
-    return val
   })
-  var map = terrapaint.map(transformedNoise, {
+  const map = terrapaint.map(transformedNoise, {
     offset: true,
     period: 1,
     thisArg: simplex
