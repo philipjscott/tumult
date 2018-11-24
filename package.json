@@ -1,13 +1,16 @@
 {
   "name": "tumult",
-  "version": "3.0.4",
+  "version": "0.0.0-development",
   "description": "A Javascript noise library",
   "main": "index.js",
   "scripts": {
     "lint": "standard",
     "fix": "standard --fix",
+    "test": "echo \"No test specified!\"",
     "build": "parcel build --global tumult --out-dir dist --out-file tumult.min.js index.js",
-    "demo": "parcel build docs/index.html --out-dir demo"
+    "demo": "parcel build docs/index.html --out-dir demo",
+    "travis-deploy-once": "travis-deploy-once --pro",
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "noise",
@@ -25,10 +28,12 @@
   "devDependencies": {
     "parcel-bundler": "^1.10.3",
     "standard": "^12.0.1",
-    "terrapaint": "^2.0.1"
+    "terrapaint": "^2.0.1",
+    "travis-deploy-once": "^5.0.9",
+    "semantic-release": "^15.12.1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ScottyFillups/tumult.git"
+    "url": "https://github.com/ScottyFillups/tumult.git"
   }
 }
