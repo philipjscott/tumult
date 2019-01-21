@@ -9,6 +9,7 @@
     "lint": "standard",
     "fix": "standard --fix",
     "test": "yarn run lint && nyc ava",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build": "parcel build --global tumult --out-dir dist --out-file tumult.min.js index.js",
     "pages": "parcel build demo/index.html --out-dir pages --public-url '.'",
     "travis-deploy-once": "travis-deploy-once --pro",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "ava": "^1.1.0",
+    "coveralls": "^3.0.2",
     "nyc": "^13.1.0",
     "parcel-bundler": "^1.10.3",
     "semantic-release": "^15.12.1",
