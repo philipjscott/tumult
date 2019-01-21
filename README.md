@@ -1,5 +1,18 @@
 # tumult
 
+[![npm version](https://badge.fury.io/js/tumult.svg)](https://badge.fury.io/js/tumult)
+[![Build Status](https://travis-ci.org/ScottyFillups/tumult.svg?branch=master)](https://travis-ci.org/ScottyFillups/tumult)
+[![Coverage Status](https://coveralls.io/repos/github/ScottyFillups/tumult/badge.svg?branch=master)](https://coveralls.io/github/ScottyFillups/tumult?branch=master)
+[![install size](https://packagephobia.now.sh/badge?p=tumult)](https://packagephobia.now.sh/result?p=tumult)
+
+<br>
+
+![noise](https://raw.githubusercontent.com/ScottyFillups/tumult/master/images/simplex.png)
+![noise](https://raw.githubusercontent.com/ScottyFillups/tumult/master/images/octaves.png)
+![noise](https://raw.githubusercontent.com/ScottyFillups/tumult/master/images/abs.png)
+![noise](https://raw.githubusercontent.com/ScottyFillups/tumult/master/images/invert.png)
+![noise](https://raw.githubusercontent.com/ScottyFillups/tumult/master/images/sin.png)
+
 Yet another **Javascript noise library**. Demonstrations [here](http://scottyfillups.github.io/tumult). Currently supports Perlin noise for any arbitrary dimension and Simplex[1-2]. Eventually might support:
 * Simplex[3-4]
 
