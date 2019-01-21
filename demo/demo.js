@@ -35,6 +35,7 @@ $('#gen-noise').addEventListener('click', function () {
   let transformFn
 
   try {
+    // eslint-disable-next-line no-new-func
     transformFn = (new Function('x', 'y', fnBody)).bind(simplex)
   } catch (e) {
     alert(`

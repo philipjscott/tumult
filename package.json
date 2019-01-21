@@ -1,12 +1,15 @@
 {
   "name": "tumult",
+  "author": "Philip Scott",
   "version": "0.0.0-development",
+  "license": "MIT",
   "description": "A Javascript noise library",
   "main": "index.js",
   "scripts": {
     "lint": "standard",
     "fix": "standard --fix",
-    "test": "echo \"No test specified!\"",
+    "test": "yarn run lint && nyc ava",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build": "parcel build --global tumult --out-dir dist --out-file tumult.min.js index.js",
     "pages": "parcel build demo/index.html --out-dir pages --public-url '.'",
     "travis-deploy-once": "travis-deploy-once --pro",
@@ -20,17 +23,23 @@
     "simplex noise",
     "procedural generation"
   ],
-  "author": "Philip Scott",
-  "license": "MIT",
+  "ava": {
+    "require": [
+      "esm"
+    ]
+  },
   "dependencies": {
     "random-seed": "^0.3.0"
   },
   "devDependencies": {
+    "ava": "^1.1.0",
+    "coveralls": "^3.0.2",
+    "nyc": "^13.1.0",
     "parcel-bundler": "^1.10.3",
+    "semantic-release": "^15.12.1",
     "standard": "^12.0.1",
     "terrapaint": "^2.0.1",
-    "travis-deploy-once": "^5.0.9",
-    "semantic-release": "^15.12.1"
+    "travis-deploy-once": "^5.0.9"
   },
   "repository": {
     "type": "git",
