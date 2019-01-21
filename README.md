@@ -1,11 +1,9 @@
 # tumult
 
 [![npm version](https://badge.fury.io/js/tumult.svg)](https://badge.fury.io/js/tumult)
-[![Build Status](https://travis-ci.org/ScottyFillups/tumult.svg?branch=master)](https://travis-ci.org/ScottyFillups/tumult)
+[![Build Status](https://travis-ci.com/ScottyFillups/tumult.svg?branch=master)](https://travis-ci.com/ScottyFillups/tumult)
 [![Coverage Status](https://coveralls.io/repos/github/ScottyFillups/tumult/badge.svg?branch=master)](https://coveralls.io/github/ScottyFillups/tumult?branch=master)
 [![install size](https://packagephobia.now.sh/badge?p=tumult)](https://packagephobia.now.sh/result?p=tumult)
-
-<br>
 
 ![noise](https://raw.githubusercontent.com/ScottyFillups/tumult/master/images/simplex.png)
 ![noise](https://raw.githubusercontent.com/ScottyFillups/tumult/master/images/octaves.png)
@@ -69,8 +67,6 @@ Type: `String | Number`
 
 Seed to use for shuffling the permutation look-up table. If no value is passed, `Math.random()` will be used as a seed.
 
-<br>
-
 ### noise
 
 Noise object returned from invoke a noise constructor; all noise objects have the same API:
@@ -93,7 +89,10 @@ For quickly displaying heightmaps, I highly recommend using [terrapaint](https:/
 
 ~~**noise.transform(fn)**~~
 
-**Deprecated: Consider wrapping your function instead:**
+<span style="color: red"><b>Deprecated</b></span>
+<br>
+<br>
+**Consider wrapping your function instead:**
 
 ```js
 import tumult from 'tumult'
