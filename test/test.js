@@ -1,7 +1,7 @@
 'use strict'
 
-import test from 'ava'
-import tumult from '../'
+const test = require('ava')
+const tumult = require('../')
 
 function loopcall (depth, iters, fn, memo = null) {
   if (memo === null) {
