@@ -4,7 +4,7 @@
   "version": "0.0.0-development",
   "license": "MIT",
   "description": "A Javascript noise library",
-  "main": "./dist/tumult.min.js",
+  "main": "index.js",
   "scripts": {
     "lint": "standard",
     "fix": "standard --fix",
@@ -23,11 +23,6 @@
     "simplex noise",
     "procedural generation"
   ],
-  "ava": {
-    "require": [
-      "esm"
-    ]
-  },
   "dependencies": {
     "random-seed": "^0.3.0"
   },

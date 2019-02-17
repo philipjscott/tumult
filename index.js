@@ -1,3 +1,3 @@
-import tumult from './lib'
+'use strict'
 
-export default tumult
+module.exports = require('./lib')
