@@ -30,7 +30,7 @@ The built files are also available on `unpkg`:
 ## Usage
 
 ```js
-import tumult from 'tumult'
+const tumult = require('tumult')
 
 const simplex2 = new tumult.Simplex2('some_seed')
 
@@ -95,7 +95,7 @@ For quickly displaying heightmaps, I highly recommend using [terrapaint](https:/
 **Consider wrapping your function instead:**
 
 ```js
-import tumult from 'tumult'
+const tumult = require('tumult')
 
 const simplex2 = new tumult.Simplex2()
 const transform = (x, y) => Math.sin(1 / simplex2(x, y))
@@ -104,7 +104,7 @@ const transform = (x, y) => Math.sin(1 / simplex2(x, y))
 Takes in a function which will its `this` bound to noiseGenerator object, meaning you can call `gen` and `octavate` using `this.gen`, etc. This function should take in the dimensions as parameters, and return a value. `.transform` will return the new transformed noise function. For example, suppose you want a function which will return `sin(1/noise(x/32,y/32))`, you can do the following:
 
 ```js
-import tumult from 'tumult'
+const tumult = require('tumult')
 
 const simplex2 = new tumult.Simplex2('seed')
 const noise = simplex2.transform(function (x, y) {
