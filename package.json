@@ -5,6 +5,8 @@
   "license": "MIT",
   "description": "A Javascript noise library",
   "main": "index.js",
+  "unpkg": "dist/tumult.min.js",
+  "jsdelivr": "dist/tumult.min.js",
   "scripts": {
     "lint": "standard",
     "fix": "standard --fix",
