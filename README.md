@@ -20,11 +20,12 @@ Yet another **Javascript noise library**. Demonstrations [here](http://scottyfil
 npm install tumult --save
 ```
 
-The built files are also available on `unpkg`:
+The built files are also available on `unpkg` and `jsdelivr`:
 
 
 ```html
-<script src="https://unpkg.com/tumult/dist/tumult.min.js"></script>
+<script src="https://unpkg.com/tumult"></script>
+<script src="https://cdn.jsdelivr.net/npm/tumult"></script>
 ```
 
 ## Usage
