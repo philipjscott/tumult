@@ -40,8 +40,8 @@ function rangeMacro (t, fn) {
     loopcall(ctor.d, iters, args => {
       const val = fn(n, args)
 
-      if (val > 1 || val < -1) {
-        t.fail()
+      if (!Number.isFinite(val) || val > 1 || val < -1) {
+        t.fail(`Invalid noise value [${val}]`)
       }
     })
   })
