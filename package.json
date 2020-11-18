@@ -33,7 +33,7 @@
     "coveralls": "^3.0.2",
     "nyc": "^14.1.1",
     "parcel-bundler": "^1.10.3",
-    "semantic-release": "^15.12.1",
+    "semantic-release": "^17.2.3",
     "standard": "^12.0.1",
     "terrapaint": "^2.0.1",
     "travis-deploy-once": "^5.0.9"
