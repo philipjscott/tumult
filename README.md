@@ -11,7 +11,7 @@
 ![noise](https://raw.githubusercontent.com/ScottyFillups/tumult/master/images/invert.png)
 ![noise](https://raw.githubusercontent.com/ScottyFillups/tumult/master/images/sin.png)
 
-Yet another **Javascript noise library**. Demonstrations [here](http://scottyfillups.github.io/tumult). Currently supports Perlin noise for any arbitrary dimension and Simplex[1-2]. Eventually might support:
+Yet another **Javascript noise library**. Demonstrations [here](http://philipjscott.github.io/tumult). Currently supports Perlin noise for any arbitrary dimension and Simplex[1-2]. Eventually might support:
 * Simplex[3-4]
 
 ## Installation
